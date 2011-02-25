@@ -17,20 +17,20 @@ void NotesLoaderJson::GetApplicableFiles( const RString &sPath, vector<RString> 
 
 void Deserialize(BPMSegment &seg, const Json::Value &root)
 {
-	seg.m_iStartIndex = root["StartIndex"].asInt();
-	seg.m_fBPS = (float)root["BPS"].asDouble();
+	seg.m_iStartIndex = BeatToNoteRow((float)root["Beat"].asDouble());
+	seg.m_fBPS = (float)(root["BPM"].asDouble() / 60);
 }
 
 static void Deserialize(StopSegment &seg, const Json::Value &root)
 {
-	seg.m_iStartRow = root["StartRow"].asInt();
-	seg.m_fStopSeconds = (float)root["StopSeconds"].asDouble();
+	seg.m_iStartRow = BeatToNoteRow((float)(root["Beat"].asDouble()));
+	seg.m_fStopSeconds = (float)root["Seconds"].asDouble();
 }
 
 static void Deserialize(TimingData &td, const Json::Value &root)
 {
-	JsonUtil::DeserializeVectorObjects( td.m_BPMSegments, Deserialize, root["BPMs"] );
-	JsonUtil::DeserializeVectorObjects( td.m_StopSegments, Deserialize, root["Stops"] );
+	JsonUtil::DeserializeVectorObjects( td.m_BPMSegments, Deserialize, root["BpmSegments"] );
+	JsonUtil::DeserializeVectorObjects( td.m_StopSegments, Deserialize, root["StopSegments"] );
 }
 
 static void Deserialize(LyricSegment &o, const Json::Value &root)
@@ -76,22 +76,20 @@ static void Deserialize( TapNote &o, const Json::Value &root )
 		o.pn = (PlayerNumber)root["PlayerNumber"].asInt();
 }
 
-static void Deserialize( NoteData &o, const Json::Value &root )
+static void Deserialize( StepsType st, NoteData &nd, const Json::Value &root )
 {
-	o.SetNumTracks(root.size());
-	for( unsigned t=0; t<root.size(); t++ )
+	int iTracks = GAMEMAN->StepsTypeToNumTracks( st );
+	nd.SetNumTracks( iTracks );
+	for( unsigned i=0; i<root.size(); i++ )
 	{
-		NoteData::TrackMap tm = o.GetTrack(t);
-		const Json::Value &root2 = root[t];
-		Json::Value::Members m = root2.getMemberNames();
-		FOREACH_CONST( string, m, key )
-		{
-			int row = atoi( key->c_str() );
-			const Json::Value &root3 = root2[*key];
-			TapNote tn;
-			Deserialize( tn, root3 );
-			o.SetTapNote( t, row, tn );
-		}
+		Json::Value root2 = root[i];
+		float fBeat = (float)root2[(unsigned)0].asDouble();
+		int iRow = BeatToNoteRow(fBeat);
+		int iTrack = root2[1].asInt();
+		const Json::Value &root3 = root2[2];
+		TapNote tn;
+		Deserialize( tn, root3 );
+		nd.SetTapNote( iTrack, iRow, tn );
 	}
 }
 
@@ -110,7 +108,7 @@ static void Deserialize( Steps &o, const Json::Value &root )
 	o.Decompress();
 
 	NoteData nd;
-	Deserialize( nd, root["NoteData"] );
+	Deserialize( o.m_StepsType, nd, root["NoteData"] );
 	o.SetNoteData( nd );
 	//o.SetHash( root["Hash"].asInt() );
 	o.SetDescription( root["Description"].asString() );
@@ -179,7 +177,7 @@ static void Deserialize( Song &out, const Json::Value &root )
 
 	{
 		vector<Steps*> vpSteps;
-		JsonUtil::DeserializeVectorPointers<Steps>( vpSteps, Deserialize, root["Steps"] );
+		JsonUtil::DeserializeVectorPointers<Steps>( vpSteps, Deserialize, root["Charts"] );
 		FOREACH( Steps*, vpSteps, iter )
 			out.AddSteps( *iter );
 	}

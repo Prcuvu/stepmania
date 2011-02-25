@@ -4,11 +4,13 @@
 #define NotesWriterJson_H
 
 class Song;
+class Steps;
 
 class NotesWriterJson
 {
 public:
-	static bool Write( RString sPath, const Song &out, bool bSavingCache );
+	static bool WriteSong( const RString &sFile, const Song &out, bool bWriteSteps );
+	static bool WriteSteps( const RString &sFile, const Steps &out );
 };
 
 #endif

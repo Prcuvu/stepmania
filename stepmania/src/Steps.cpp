@@ -27,6 +27,8 @@
 
 Steps::Steps()
 {
+	m_iStepManiaStepsId = -1;
+
 	m_bSavedToDisk = false;
 	m_StepsType = STEPS_TYPE_INVALID;
 	m_LoadedFromProfile = ProfileSlot_INVALID;

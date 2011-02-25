@@ -68,6 +68,7 @@ class Song
 {
 public:
 	RString m_sSongDir;
+	int m_iStepManiaSongId;
 
 	ShowSong m_SelectionDisplay;
 
@@ -83,7 +84,7 @@ public:
 	void TranslateTitles();	// called by TidyUpData
 
 	bool Save();	// saves SM and DWI
-	bool SaveToJsonFile( RString sPath, bool bSavingCache );
+	bool SaveToJsonFile( RString sPath );
 	bool SaveToSMFile( RString sPath, bool bSavingCache );
 	void SaveToCacheFile();
 	void SaveToDWIFile();

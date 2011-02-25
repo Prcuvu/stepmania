@@ -21,6 +21,8 @@ public:
 	Steps();
 	~Steps();
 
+	int m_iStepManiaStepsId;
+
 	// initializers
 	void AutogenFrom( const Steps *parent, StepsType ntTo );
 	void CopyFrom( Steps* pSource, StepsType ntTo, float fMusicLengthSeconds );

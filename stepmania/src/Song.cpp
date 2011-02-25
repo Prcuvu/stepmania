@@ -59,10 +59,11 @@ StringToX( DisplayBpmType );
 
 Song::Song()
 {
+	m_iStepManiaSongId = -1;
+
 	FOREACH_BackgroundLayer( i )
 		m_BackgroundChanges[i] = AutoPtrCopyOnWrite<VBackgroundChange>(new VBackgroundChange);
 	m_ForegroundChanges = AutoPtrCopyOnWrite<VBackgroundChange>(new VBackgroundChange);
-	
 
 	m_LoadedFromProfile = ProfileSlot_INVALID;
 	m_fMusicSampleStartSeconds = -1;
@@ -778,15 +779,11 @@ bool Song::SaveToSMFile( RString sPath, bool bSavingCache )
 	return wr.Write(sPath, *this, bSavingCache);
 }
 
-bool Song::SaveToJsonFile( RString sPath, bool bSavingCache )
+bool Song::SaveToJsonFile( RString sPath)
 {
 	LOG->Trace( "Song::SaveToJsonFile('%s')", sPath.c_str() );
 
-	/* If the file exists, make a backup. */
-	if( !bSavingCache && IsAFile(sPath) )
-		FileCopy( sPath, sPath + ".old" );
-
-	return NotesWriterJson::Write(sPath, *this, bSavingCache);
+	return NotesWriterJson::WriteSong(sPath, *this, true);
 }
 
 void Song::SaveToCacheFile()

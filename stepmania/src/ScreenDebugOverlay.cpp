@@ -25,6 +25,11 @@
 #include "SongManager.h"
 #include "GameLoop.h"
 #include "ScreenServiceAction.h"
+#include "RageFileManager.h"
+#include "NotesWriterJson.h"
+#include "Steps.h"
+#include "RageSurfaceUtils.h"
+#include "RageSurface_Load.h"
 
 static bool g_bIsDisplayed = false;
 static bool g_bIsSlow = false;
@@ -802,6 +807,75 @@ class DebugLineWriteProfiles : public IDebugLine
 	}
 };
 
+class DebugLineWriteJson : public IDebugLine
+{
+	virtual RString GetDescription() { return "Write Song JSON"; }
+	virtual RString GetValue() { return RString(); }
+	virtual bool IsEnabled() { return true; }
+	virtual void Do( RString &sMessageOut )
+	{
+		int iSongId = 1;
+		int iStepsId = 1;
+
+		FILEMAN->CreateDir("/JsonSongs/");
+		const vector<Song*> &songs = SONGMAN->GetAllSongs();
+		FOREACH_CONST( Song*, songs, pSong ) 
+		{
+			RString sSongDir = ssprintf( "/JsonSongs/%d/", iSongId++ );
+			RString sSongFile = sSongDir + "/song.json";
+			RString sStepsDir = sSongDir + "/steps/";
+			FILEMAN->CreateDir(sStepsDir);
+
+			NotesWriterJson::WriteSong( sSongFile, **pSong, false );
+			const vector<Steps*> &vpSteps = (*pSong)->GetAllSteps();
+
+			FOREACH_CONST( Steps*, vpSteps, pSteps )
+			{
+				if( (*pSteps)->IsAutogen() )
+					continue;
+				RString sStepsFile = sStepsDir + ssprintf( "%d.json", iStepsId++ );
+				NotesWriterJson::WriteSteps( sStepsFile, **pSteps );
+
+				{
+					RString sSrcFile = (*pSong)->GetBackgroundPath();
+					RString sDstFile = sSongDir + "background.png";
+					if( GetExtension(sSrcFile) == "png" )
+					{
+						FileCopy( sSrcFile, sDstFile );
+					}
+					else
+					{
+						RString error;
+						RageSurface *img = RageSurfaceUtils::LoadFile( sSrcFile, error );
+						RageSurfaceUtils::SaveSurface( img, sDstFile );
+					}
+				}
+
+				{
+					RString sSrcFile = (*pSong)->GetBannerPath();
+					RString sDstFile = sSongDir + "banner.png";
+					if( GetExtension(sSrcFile) == "png" )
+					{
+						FileCopy( sSrcFile, sDstFile );
+					}
+					else
+					{
+						RString error;
+						RageSurface *img = RageSurfaceUtils::LoadFile( sSrcFile, error );
+						RageSurfaceUtils::SaveSurface( img, sDstFile );
+					}
+				}
+
+				{
+					RString sSrcFile = (*pSong)->GetMusicPath();
+					RString sDstFile = sSongDir + "music." + GetExtension(sSrcFile);
+					FileCopy( sSrcFile, sDstFile );
+				}
+			}
+		}
+	}
+};
+
 class DebugLineWritePreferences : public IDebugLine
 {
 	virtual RString GetDescription() { return WRITE_PREFERENCES.GetValue(); }
@@ -916,6 +990,7 @@ DECLARE_ONE( DebugLineFillMachineStats );
 DECLARE_ONE( DebugLineSendNotesEnded );
 DECLARE_ONE( DebugLineReloadCurrentScreen );
 DECLARE_ONE( DebugLineReloadTheme );
+DECLARE_ONE( DebugLineWriteJson );
 DECLARE_ONE( DebugLineWriteProfiles );
 DECLARE_ONE( DebugLineWritePreferences );
 DECLARE_ONE( DebugLineMenuTimer );
