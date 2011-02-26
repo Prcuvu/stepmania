@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
-	Name="StepMania-net2005"
+	Version="9.00"
+	Name="StepMania-net2008"
 	ProjectGUID="{AF209DBD-24BD-4356-8DFE-41751B221195}"
 	RootNamespace="StepMania"
 	Keyword="MFCProj"
+	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
 		<Platform
@@ -92,6 +93,8 @@
 				MapFileName="$(IntDir)\$(TargetName).map"
 				MapExports="true"
 				SubSystem="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -110,9 +113,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -157,7 +157,7 @@
 				InlineFunctionExpansion="2"
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="2"
-				AdditionalIncludeDirectories=".;vorbis;libjpeg;&quot;lua-5.0\include&quot;;&quot;ffmpeg\include&quot;"
+				AdditionalIncludeDirectories=".;vorbis;libjpeg;&quot;lua-5.0\include&quot;;ffmpeg\include;jsoncpp\include"
 				PreprocessorDefinitions="WIN32,NDEBUG,_WINDOWS,WINDOWS,RELEASE"
 				StringPooling="true"
 				MinimalRebuild="false"
@@ -200,6 +200,8 @@
 				MapFileName="$(IntDir)\$(TargetName).map"
 				MapExports="true"
 				SubSystem="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -218,9 +220,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -302,6 +301,8 @@
 				MapFileName="$(IntDir)\$(TargetName).map"
 				MapExports="true"
 				SubSystem="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -320,9 +321,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -358,14 +356,6 @@
 			</File>
 			<File
 				RelativePath="ScreenBookkeeping.h"
-				>
-			</File>
-			<File
-				RelativePath="ScreenCenterImage.cpp"
-				>
-			</File>
-			<File
-				RelativePath="ScreenCenterImage.h"
 				>
 			</File>
 			<File
@@ -1073,6 +1063,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\CreateZip.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\CreateZip.h"
+				>
+			</File>
+			<File
 				RelativePath="DateTime.cpp"
 				>
 			</File>
@@ -1094,6 +1092,14 @@
 			</File>
 			<File
 				RelativePath="EnumHelper.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ExportPackage.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ExportPackage.h"
 				>
 			</File>
 			<File
@@ -1182,6 +1188,14 @@
 			</File>
 			<File
 				RelativePath="Inventory.h"
+				>
+			</File>
+			<File
+				RelativePath=".\JsonUtil.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\JsonUtil.h"
 				>
 			</File>
 			<File
@@ -1293,6 +1307,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\NotesLoaderJson.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\NotesLoaderJson.h"
+				>
+			</File>
+			<File
 				RelativePath="NotesLoaderKSF.cpp"
 				>
 			</File>
@@ -1314,6 +1336,14 @@
 			</File>
 			<File
 				RelativePath="NotesWriterDWI.h"
+				>
+			</File>
+			<File
+				RelativePath=".\NotesWriterJson.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\NotesWriterJson.h"
 				>
 			</File>
 			<File
@@ -1616,6 +1646,22 @@
 		<Filter
 			Name="StepMania"
 			>
+			<File
+				RelativePath=".\CommandLineActions.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\CommandLineActions.h"
+				>
+			</File>
+			<File
+				RelativePath=".\FileDownload.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\FileDownload.h"
+				>
+			</File>
 			<File
 				RelativePath=".\GameLoop.cpp"
 				>
@@ -3261,6 +3307,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\RageTypes.cpp"
+				>
+			</File>
+			<File
 				RelativePath="RageTypes.h"
 				>
 			</File>
@@ -3514,14 +3564,6 @@
 			</File>
 			<File
 				RelativePath="CryptManager.h"
-				>
-			</File>
-			<File
-				RelativePath=".\ExportNsisStrings.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\ExportNsisStrings.h"
 				>
 			</File>
 			<File
@@ -4223,6 +4265,34 @@
 		</File>
 		<File
 			RelativePath="archutils\Win32\DialogErrorHeader.bmp"
+			>
+		</File>
+		<File
+			RelativePath=".\jsoncpp\src\lib_json\json_batchallocator.h"
+			>
+		</File>
+		<File
+			RelativePath=".\jsoncpp\src\lib_json\json_internalarray.inl"
+			>
+		</File>
+		<File
+			RelativePath=".\jsoncpp\src\lib_json\json_internalmap.inl"
+			>
+		</File>
+		<File
+			RelativePath=".\jsoncpp\src\lib_json\json_reader.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\jsoncpp\src\lib_json\json_value.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\jsoncpp\src\lib_json\json_valueiterator.inl"
+			>
+		</File>
+		<File
+			RelativePath=".\jsoncpp\src\lib_json\json_writer.cpp"
 			>
 		</File>
 		<File
