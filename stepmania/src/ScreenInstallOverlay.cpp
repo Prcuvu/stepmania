@@ -275,8 +275,12 @@ void HandleLaunch( RString sJson )
 	// Parse the JSON response, make a list of all packages need to be downloaded.
 	if( root["Username"].isString() )
 	{
-		g_sUsername.Set( root["Username"].asString() );
-		SCREENMAN->SystemMessage("Logged in as " + g_sUsername.Get() );
+		RString sNewUsername = root["Username"].asString();
+		if( g_sUsername.Get() != sNewUsername )
+		{
+			g_sUsername.Set( sNewUsername );
+			SCREENMAN->SystemMessage("Logged in as " + sNewUsername );
+		}
 	}
 	if( root["Cookie"].isString() )
 		g_sCookie.Set( root["Cookie"].asString() );
