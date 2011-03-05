@@ -2769,6 +2769,8 @@ void ScreenEdit::HandleMainMenuChoice( MainMenuChoice c, const vector<int> &iAns
 		case save:
 		case save_on_exit:
 		case export_song:
+			SaveExport(c);
+			break;
 		case revert_to_last_save:
 			ScreenPrompt::Prompt( SM_DoRevertToLastSave, REVERT_LAST_SAVE.GetValue() + "\n\n" + DESTROY_ALL_UNSAVED_CHANGES.GetValue(), PROMPT_YES_NO, ANSWER_NO );
 			break;
