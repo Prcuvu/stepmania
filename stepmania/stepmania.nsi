@@ -81,12 +81,11 @@ SetCompressor /SOLID lzma
 	!insertmacro MUI_PAGE_LICENSE "Installer_EULA.txt"
 
 !ifdef ALLOW_OPENCANDY
+	!define OC_OCSETUPHLP_FILE_PATH ".\OCSetupHlp.dll"
 	!include "OCSetupHlp.nsh"
-	!include "opencandy.inc"
-
-	PageEx custom
-	 PageCallbacks OpenCandyPageStartFn OpenCandyPageLeaveFn 
-	PageExEnd
+	!insertmacro OpenCandyReserveFile
+	!include "OpenCandySettings.inc"
+	!insertmacro OpenCandyOfferPage
 !endif
 
 	;!insertmacro MUI_PAGE_COMPONENTS
@@ -356,7 +355,7 @@ Section "${PRODUCT_DISPLAY}" SecCopyUI
   SetOutPath $INSTDIR
 
 !ifdef ALLOW_OPENCANDY
-  !insertmacro OpenCandyInstallDLL	
+  !insertmacro OpenCandyInstallEmbedded	
 !endif
   
 SectionEnd ; end the section
@@ -523,10 +522,6 @@ Function PreInstall
 
 FunctionEnd
 
-!ifdef ALLOW_OPENCANDY
-Var DontShowOC
-!endif
-
 Function .onInit
 
 	; Force show language selection for debugging
@@ -537,13 +532,7 @@ Function .onInit
 	InitPluginsDir
 
 !ifdef ALLOW_OPENCANDY
-    IntOp $DontShowOC 0 + 0
-	${GetOptions} $CMDLINE "/NOCANDY" $R0
-	IfErrors done_opencandy no_opencandy
-	no_opencandy:
-    IntOp $DontShowOC 1 + 0
-	done_opencandy:
-	!insertmacro OpenCandyInitRemnant "${PRODUCT_DISPLAY}" "${OPENCANDY_KEY}" "${OPENCANDY_SECRET}" "Software\${PRODUCT_ID}\OpenCandy" $DontShowOC
+	!insertmacro OpenCandyAsyncInit "${PRODUCT_DISPLAY}" "${OPENCANDY_KEY}" "${OPENCANDY_SECRET}" ${OC_INIT_MODE_NORMAL}
 !endif
 		
 !ifdef SHOW_AUTORUN
@@ -578,17 +567,6 @@ Function .onInstSuccess
 
 !ifdef ALLOW_OPENCANDY
   !insertmacro OpenCandyOnInstSuccess
-!endif
-
-FunctionEnd
-
-;--------------------------------
-; OnInstFailed
-
-Function .onInstFailed
-
-!ifdef ALLOW_OPENCANDY
-  !insertmacro OpenCandyOnInstFailed
 !endif
 
 FunctionEnd
@@ -730,3 +708,9 @@ Function un.onInit
 	!insertmacro MUI_UNGETLANGUAGE
 
 FunctionEnd
+
+
+!ifdef ALLOW_OPENCANDY
+	; Have the compiler perform some basic OpenCandy API implementation checks
+	!insertmacro OpenCandyAPIDoChecks
+!endif
