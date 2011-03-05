@@ -49,8 +49,6 @@ void StripIgnoredSmzipFiles( vector<RString> &vsFilesInOut )
 
 bool ExportDir( RString sSmzipFile, RString sDirToExport, RString &sErrorOut )
 {
-	//sSmzipFile = "/simple1.zip";
-
 	RageFile f;
 	// TODO: Mount Desktop/ for each OS
 	if( !f.Open(sSmzipFile, RageFile::WRITE) )
@@ -86,7 +84,10 @@ bool ExportDir( RString sSmzipFile, RString sDirToExport, RString &sErrorOut )
 RString ExportSong( const Song *pSong )
 {
 	RString sDirToExport = pSong->GetSongDir();
-	RString sPackageName = ReplaceInvalidFileNameChars( sDirToExport + ".smzip" );
+
+	RString sPackageName = sDirToExport;
+	TrimLeft( sPackageName, "/" );
+	sPackageName = ReplaceInvalidFileNameChars( sPackageName + ".smzip" );
 
 	RString sSmzipFile = SpecialFiles::DESKTOP_DIR + sPackageName;
 
