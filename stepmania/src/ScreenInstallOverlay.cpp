@@ -328,7 +328,9 @@ static bool HandleStepManiaProtocolLaunch(const RString &arg)
 static bool IsStepManiaProtocolFile(const RString &arg)
 {
 	// for now, only load from the StepMania domain until the security implications of this feature are better understood.
-	return BeginsWith(arg,"stepmania://beta.stepmania.com/");
+	static Regex re1( "^stepmania://\\w+.stepmania.com" );
+	static Regex re2( "^stepmania://\\w+.stepmaniashare.com" );	// for testing
+	return re1.Compare(arg) || re2.Compare(arg);
 }
 
 static bool IsSmzip(const RString &arg)
