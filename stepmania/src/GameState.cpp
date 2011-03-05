@@ -386,7 +386,7 @@ void GameState::PlayersFinalized()
 void SaveAllProfiles( bool bEndGame )
 {
 	PROFILEMAN->SaveMachineProfile();
-	PROFILEMAN->UploadMachineProfie();
+	//PROFILEMAN->UploadMachineProfie();
 	FOREACH_HumanPlayer( pn )
 	{
 		if( !PROFILEMAN->IsPersistentProfile(pn) )
