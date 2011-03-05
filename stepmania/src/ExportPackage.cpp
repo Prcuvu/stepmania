@@ -83,56 +83,6 @@ bool ExportDir( RString sSmzipFile, RString sDirToExport, RString &sErrorOut )
 	return true;
 }
 
-RString PublishSong( const Song *pSong )
-{
-	{
-		FileTransfer fd;
-		fd.StartDownload( "http://www.stepmania.com/api.php?action=is_logged_in", "");
-		fd.BlockUntilFinished();
-		if( fd.GetResponseCode() != 200 )
-			return "Bad response code is_logged_in " + fd.GetResponseCode();
-		XNode xml;
-		PARSEINFO pi;
-		xml.Load( fd.GetResponse(), &pi );
-		if( pi.error_occur )
-			return "Error parsing is_logged_in " + pi.error_string;
-		if( xml.m_sName != "is_logged_in" )
-			return "Unexpected response in is_logged_in";
-		bool bIsLoggedIn = xml.m_sValue == "1";
-		if( !bIsLoggedIn )
-		{
-			HOOKS->GoToURL("http://www.stepmania.com/launch.php");
-			return "You must log into StepMania.com. Launching.";
-		}
-	}
-
-	RString sDirToExport = pSong->GetSongDir();
-	RString sPackageName = ReplaceInvalidFileNameChars( sDirToExport + ".smzip" );
-
-	RString sSmzipFile = SpecialFiles::CACHE_DIR + "Uploads/" + sPackageName;
-
-	RString sErrorOut;
-	if( !ExportDir(sSmzipFile, sDirToExport, sErrorOut) )
-		return "Failed to export '" + sDirToExport + "' to '" + sSmzipFile + "'";
-
-	RString sUrl = "unknown url";
-	{
-		FileTransfer ft;
-		ft.StartUpload( "http://www.stepmania.com/api.php?action=upload_song", sSmzipFile, "" );
-		ft.BlockUntilFinished();
-		if( ft.GetResponseCode() != 200 )
-			return "Bad response code upload_song " + ft.GetResponseCode();
-		RString sResponse = ft.GetResponse();
-		Json::Value root;
-		RString sError;
-		if( !JsonUtil::LoadFromString(root,sResponse,sError) )
-			return "Error parsing response: " + sError;
-		HOOKS->GoToURL(root["url"].asString());
-	}
-		
-	return "Published as '" + sUrl + "'";
-}
-
 RString ExportSong( const Song *pSong )
 {
 	RString sDirToExport = pSong->GetSongDir();
@@ -147,11 +97,6 @@ RString ExportSong( const Song *pSong )
 	return "Exported as '" + sSmzipFile + "'";
 }
 
-void ExportPackage::PublishSongWithUI( const Song *pSong )
-{
-	RString sResult = PublishSong( pSong );
-	ScreenPrompt::Prompt( SM_None, sResult );
-}
 void ExportPackage::ExportSongWithUI( const Song *pSong )
 {
 	RString sResult = ExportSong( pSong );

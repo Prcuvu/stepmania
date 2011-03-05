@@ -284,7 +284,6 @@ public:
 		play_selection_start_to_end,
 		play_current_beat_to_end,
 		save,
-		publish,
 		export_song,
 		revert_to_last_save,
 		revert_from_disk,
@@ -300,7 +299,7 @@ public:
 	};
 	void HandleMainMenuChoice( MainMenuChoice c, const vector<int> &iAnswers );
 	void HandleMainMenuChoice( MainMenuChoice c ) { const vector<int> v; HandleMainMenuChoice( c, v ); }
-	void SaveExportPublish(MainMenuChoice c);
+	void SaveExport(MainMenuChoice c);
 	MainMenuChoice m_CurrentAction;
 
 	enum AreaMenuChoice
