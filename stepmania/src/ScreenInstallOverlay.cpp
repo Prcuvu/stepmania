@@ -155,7 +155,7 @@ public:
 	{
 		m_pTransfer = NULL;
 	}
-	~DownloadTask()
+	virtual ~DownloadTask()
 	{
 		SAFE_DELETE(m_pTransfer);
 	}
