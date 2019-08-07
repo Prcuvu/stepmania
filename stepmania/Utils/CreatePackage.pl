@@ -154,6 +154,7 @@ my @files = (
 	# dance noteskins
 	"NoteSkins/dance/default",
 	"NoteSkins/dance/flat",
+	"NoteSkins/dance/note",
 	# pump noteskins
 	"NoteSkins/pump/default",
 	"NoteSkins/pump/Classic",

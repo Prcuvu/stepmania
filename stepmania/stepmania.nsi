@@ -262,6 +262,7 @@ Section "Main Section" SecMain
 	SetOutPath "$INSTDIR\NoteSkins\dance"
 	File /r /x CVS /x .svn "NoteSkins\dance\default"
 	File /r /x CVS /x .svn "NoteSkins\dance\flat"
+	File /r /x CVS /x .svn "NoteSkins\dance\note"
 	SetOutPath "$INSTDIR"
 
 	CreateDirectory "$INSTDIR\BackgroundEffects"
